@@ -5,39 +5,7 @@ var autogestionApp = angular.module('autogestion',
   ]
 );
 
-autogestionApp.controller('AlumnoController', function ($scope,$resource) {
-  
-  //{"alumnoId":"1","alumnoNombre":"Rodolfo","alumnoApellido":"Leyes","alumnoDni":"1"}
-  $scope.alumno = {};
-  
-  Alumno = $resource('http://localhost:3000/alumnos/', 
-    { format: 'json' },
-    {
-      'create': {method: 'POST'}
-    }
-  );
-  
-  onError=function(){
-    return false;
-  };
-  
-  
-  $scope.guardar = function()
-  {
-    Alumno.create($scope.alumno,
-            function(newAlumno){
-                
-            }
-            ,
-            onError
-    );
-  
-  };
-  
-});
-
-
-autogestionApp.controller('LoginController', function ($scope,$resource,flash) {
+autogestionApp.controller('AutogestionController', function ($scope,$resource,flash) {
   
   
   Alumno = $resource('http://10.48.129.36:8080/autogestionapp/autogestion/alumnos/:dni', 
@@ -46,8 +14,8 @@ autogestionApp.controller('LoginController', function ($scope,$resource,flash) {
   
   
   
-  $scope.login=function(){
-    Alumno.get({dni: $scope.dni},
+  $scope.login=function(dni){
+    Alumno.get({dni: dni},
          function(alumno){
             $scope.alumno = alumno;
             flash.success= "Bienvenido!";
