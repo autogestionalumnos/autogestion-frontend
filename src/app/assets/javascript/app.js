@@ -12,6 +12,16 @@ autogestionApp.controller('AutogestionController', function ($scope,$resource,fl
     { dni: "@dni"}
   );
   
+  Curso = $resource('http://10.48.129.36:8080/autogestionapp/autogestion/cursos/:id', 
+    { id: "@id"}
+  );
+  
+  
+  Recibo = $resource('http://10.48.129.36:8080/autogestionapp/autogestion/alumnos/:alumnoId/recibos', 
+    { alumnoId: "@alumnoId"},
+    {'query': {method: 'GET', isArray: true}}
+    
+  );
   
   
   $scope.login=function(dni){
@@ -19,6 +29,28 @@ autogestionApp.controller('AutogestionController', function ($scope,$resource,fl
          function(alumno){
             $scope.alumno = alumno;
             flash.success= "Bienvenido!";
+            
+            Curso.get({id: alumno.cursoId},
+             function(curso){
+                $scope.curso = curso;
+              }
+            ,
+              function(httpResponse){ 
+                $scope.curso = null;
+                flash.error = "Curso no encontrado";
+              }
+            );
+            
+            Recibo.query({alumnoId: alumno.idAlumno },
+             function(recibos){
+                $scope.recibos = recibos;
+              }
+            ,
+              function(httpResponse){ 
+                $scope.recibos = null;
+                flash.error = "No hay recibos";
+              }
+            );
           }
         ,
           function(httpResponse){ 
